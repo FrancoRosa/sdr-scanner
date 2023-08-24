@@ -1,8 +1,35 @@
 from pylab import *
 from rtlsdr import *
+from fm_freq import *
+import datetime
+from pathlib import Path
 
 
-def get_center_frecuencies(start, step, end):
+current_date = datetime.datetime.now()
+file = current_date.strftime("%Y-%m")+".csv"
+time = current_date.strftime("%m-%d %H:%M")
+
+
+def file_exists(file_path):
+    file_path_obj = Path(file_path)
+    return file_path_obj.exists()
+
+
+def build_headers():
+    if not (file_exists(file)):
+        headers = "timestamp"
+        for f in authorized:
+            headers = headers + ", %.1f" % f
+        headers = headers + ", illegal, not found" + "\n"
+
+        with open(file, 'w') as f:
+            f.write(headers)
+
+
+build_headers()
+
+
+def get_center_frequencies(start, step, end):
     freqs = []
     target = start
     while target < end:
@@ -10,54 +37,11 @@ def get_center_frecuencies(start, step, end):
         target += step
     return freqs
 
-def get_carriers(power, fr, th):
-    t_p = []
-    t_f = []
-    for i in range(len(power)):
-        print("_______________")
-        print(power[1])
-        print("_______________")
-        if power[i] > th:
-            t_p.append(power[i])
-            t_f.append(fr[i])
-    return t_f, t_p
-
-
-authorized = [
-    88.3,
-    89.3,
-    90.1,
-    90.7,
-    91.3,
-    92.1,
-    92.7,
-    93.3,
-    93.9,
-    94.5,
-    # 95.3,
-    96.1,
-    96.9,
-    97.7,
-    98.5,
-    99.3,
-    100.1,
-    100.7,
-    101.3,
-    102.1,
-    102.7,
-    103.3,
-    104.1,
-    104.9,
-    105.7,
-    106.5,
-    # 107.1,
-    107.7
-]
 
 found = []
-ilegal = []
+illegal = []
 not_found = []
-freqs = get_center_frecuencies(88e6, 2.4e6, 108e6)
+c_freqs = get_center_frequencies(start=88e6, step=2.4e6, end=108e6)
 
 sdr = RtlSdr()
 
@@ -71,11 +55,9 @@ count = 0
 start = 0
 end = 0
 width = 0
-# valores a ajustar
-thr = 0.02
-width_th = 20
 
-for cf in freqs:
+
+for cf in c_freqs:
     sdr.center_freq = cf
 
     samples = sdr.read_samples(256*1024)
@@ -101,14 +83,26 @@ for cf in freqs:
                     count += 1
                     found.append(center)
                     if not (center in authorized):
-                        ilegal.append(center)
+                        illegal.append(center)
                 width = 0
             pre_state = 0
 
         fr.append(f[k])
 sdr.close()
-print("ilegal:", ilegal)
+
 for i in authorized:
     if not (i in found):
         not_found.append(i)
-print("not_found", not_found)
+
+log = time
+for i in authorized:
+    check = ', 0'
+    if i in found:
+        check = ', 1'
+    log = log + check
+
+with open(file, 'a') as f:
+    f.write(log + "%d, %d\n" % (len(illegal), len(not_found)))
+
+print("not_found:", not_found)
+print("illegal:", illegal)
