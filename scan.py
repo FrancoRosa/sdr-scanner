@@ -1,12 +1,14 @@
+#!/usr/bin/env python3
+
 from pylab import *
 from rtlsdr import *
 from fm_freq import *
 import datetime
 from pathlib import Path
 
-
+folder = "/home/pi/sdr-scanner/"
 current_date = datetime.datetime.now()
-file = current_date.strftime("%Y-%m")+".csv"
+file = folder + current_date.strftime("%Y-%m")+".csv"
 time = current_date.strftime("%m-%d %H:%M")
 
 
@@ -25,9 +27,7 @@ def build_headers():
         with open(file, 'w') as f:
             f.write(headers)
 
-
 build_headers()
-
 
 def get_center_frequencies(start, step, end):
     freqs = []
