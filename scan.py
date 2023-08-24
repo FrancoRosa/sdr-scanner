@@ -62,7 +62,7 @@ freqs = get_center_frecuencies(88e6, 2.4e6, 108e6)
 sdr = RtlSdr()
 
 sdr.sample_rate = 2.4e6
-sdr.gain = 4
+sdr.gain = 5
 
 power = []
 fr = []
