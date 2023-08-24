@@ -6,7 +6,7 @@ from fm_freq import *
 import datetime
 from pathlib import Path
 
-folder = "/home/pi/sdr-scanner/"
+folder = "/home/pi/sdr-scanner/csv/"
 current_date = datetime.datetime.now()
 file = folder + current_date.strftime("%Y-%m")+".csv"
 time = current_date.strftime("%m-%d %H:%M")

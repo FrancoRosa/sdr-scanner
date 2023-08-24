@@ -1,0 +1,2 @@
+En este folder se guardan todos los archivos generados por el scanner
+El scanner guarda un dato una vez por ahora
