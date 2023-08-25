@@ -6,29 +6,6 @@ from fm_freq import *
 import datetime
 from pathlib import Path
 
-folder = "/home/pi/sdr-scanner/csv/"
-current_date = datetime.datetime.now()
-file = folder + current_date.strftime("%Y-%m")+".csv"
-time = current_date.strftime("%m-%d %H:%M")
-
-
-def file_exists(file_path):
-    file_path_obj = Path(file_path)
-    return file_path_obj.exists()
-
-
-def build_headers():
-    if not (file_exists(file)):
-        headers = "timestamp"
-        for f in authorized:
-            headers = headers + ", %.1f" % f
-        headers = headers + ", illegal, not found" + "\n"
-
-        with open(file, 'w') as f:
-            f.write(headers)
-
-build_headers()
-
 def get_center_frequencies(start, step, end):
     freqs = []
     target = start
@@ -56,7 +33,7 @@ start = 0
 end = 0
 width = 0
 
-
+print("_________________________")
 for cf in c_freqs:
     sdr.center_freq = cf
 
@@ -79,7 +56,7 @@ for cf in c_freqs:
                 end = f[k]
                 if width > width_th:
                     center = round((end+start)/2.0, 1)
-                    print(count+1, center)
+                    print(count+1, center, width)
                     count += 1
                     found.append(center)
                     if not (center in authorized):
@@ -89,20 +66,8 @@ for cf in c_freqs:
 
         fr.append(f[k])
 sdr.close()
+print("_________________________")
 
-for i in authorized:
-    if not (i in found):
-        not_found.append(i)
-
-log = time
-for i in authorized:
-    check = ', 0'
-    if i in found:
-        check = ', 1'
-    log = log + check
-
-with open(file, 'a') as f:
-    f.write(log + ", %d, %d\n" % (len(illegal), len(not_found)))
 
 print("not_found:", not_found)
 print("illegal:", illegal)
