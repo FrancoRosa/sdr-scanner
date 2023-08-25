@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script
+        src="https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/jquerycsvtotable/jquery.csvToTable.js"></script>
+</head>
+
+<body>
+    <div id="CSVTable"></div>
+    <a href="/">back</a>
+
+    <script>
+        $(function () {
+            $('#CSVTable').CSVToTable('2023-08.csv');
+        });
+    </script>
+    <style>
+        td,
+        th {
+            border: solid 1px darkgreen;
+            padding: 0 0.5em;
+            text-align: right;
+        }
+
+        body {
+            background-color: black;
+            color: lime;
+            font-family: monospace;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            font-size: 1.1em;
+        }
+
+        #CSVTable {
+            width: 90vw;
+            overflow: scroll;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        /* Hide scrollbars for webkit-based browsers (Chrome, Safari, etc.) */
+        #CSVTable::-webkit-scrollbar {
+            width: 0.1em;
+            /* Adjust as needed */
+        }
+
+        #CSVTable::-webkit-scrollbar-thumb {
+            background-color: transparent;
+            /* Adjust as needed */
+        }
+    </style>
+</body>
+
+</html>
