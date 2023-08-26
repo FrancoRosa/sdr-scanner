@@ -102,7 +102,7 @@ for i in authorized:
     log = log + check
 
 with open(file, 'a') as f:
-    f.write(log + ", %d, %d, %s\n" % (len(illegal), len(not_found), str(illegal)))
+    f.write(log + ", %d, %d, %s\n" % (len(illegal), len(not_found), str(illegal).replace(",", " ")))
 
 print("not_found:", not_found)
 print("illegal:", illegal)
